@@ -32,7 +32,7 @@ public class RefreshLoadMorePageActy extends Activity {
 
     @Bind(R.id.recyclerview)
     RecyclerView recyclerview;
-    BaseQuickAdapter adapter;
+
     @Bind(R.id.swipeRefreshLayout)
     SwipeRefreshLayout refreshLayout;
 
@@ -40,6 +40,7 @@ public class RefreshLoadMorePageActy extends Activity {
     int currentPageIndex;
     int PAGE_SIZE = 10;
     PageManager pageManager;
+    BaseQuickAdapter adapter;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -60,8 +61,9 @@ public class RefreshLoadMorePageActy extends Activity {
                 getData(0);
             }
         });
-        getData(0);
         initAdapter();
+        getData(0);
+
     }
 
     private void initAdapter() {
