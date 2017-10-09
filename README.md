@@ -39,11 +39,11 @@
 
 # 最终效果
 
- ![netlist final use](img/netlist final use.jpg)
+ ![netlist final use](/img/netlist final use.jpg)
 
 gif演示
 
-![netlistdemo](img/netlistdemo.gif)
+![netlistdemo](/img/netlistdemo.gif)
 
 
 
