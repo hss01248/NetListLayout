@@ -7,8 +7,8 @@ import android.support.annotation.Nullable;
 import com.example.dell.netrecycleview.R;
 import com.example.dell.netrecycleview.qxinli.ArticleAdapter;
 import com.example.dell.netrecycleview.qxinli.ArticleInfo;
-import com.example.dell.netrecycleview.view.LoadMoreRecyclerLayout;
-import com.example.dell.netrecycleview.view.PageCustomConfig;
+import com.hss01248.netlist.view.LoadMoreRecyclerLayout;
+import com.hss01248.netlist.view.PageCustomConfig;
 
 import java.util.ArrayList;
 

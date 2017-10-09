@@ -1,4 +1,4 @@
-package com.example.dell.netrecycleview.view;
+package com.hss01248.netlist.view;
 
 import android.content.Context;
 import android.support.v4.widget.SwipeRefreshLayout;
@@ -8,7 +8,6 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.chad.library.adapter.base.BaseQuickAdapter;
-import com.example.dell.netrecycleview.qxinli.ArticleInfo;
 import com.hss01248.net.builder.StandardJsonRequestBuilder;
 import com.hss01248.net.wrapper.HttpUtil;
 import com.hss01248.net.wrapper.MyNetListener;
@@ -208,14 +207,14 @@ public class LoadMoreRecyclerLayout extends SwipeRefreshLayout {
             .addParam(loadMoreConfig.key_pageIndex,index+"")
             .addParams(pageCustomConfig.getParams());
 
-            builder.postAsync(new MyNetListener<ArticleInfo>() {
+            builder.postAsync(new MyNetListener() {
                 @Override
-                public void onSuccess(ArticleInfo o, String s, boolean b) {
+                public void onSuccess(Object o, String s, boolean b) {
 
                 }
 
                 @Override
-                public void onSuccessArr(List<ArticleInfo> response, String resonseStr, boolean isFromCache) {
+                public void onSuccessArr(List response, String resonseStr, boolean isFromCache) {
                     super.onSuccessArr(response, resonseStr, isFromCache);
 
                     if(pageIndex ==0){//第一次进入

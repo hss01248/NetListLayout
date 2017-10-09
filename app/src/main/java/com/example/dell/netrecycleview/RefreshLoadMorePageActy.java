@@ -10,7 +10,7 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 
 import com.chad.library.adapter.base.BaseQuickAdapter;
-import com.example.dell.netrecycleview.loadmore.CustomLoadMoreView;
+import com.hss01248.netlist.loadmore.CustomLoadMoreView;
 import com.example.dell.netrecycleview.qxinli.ArticleAdapter;
 import com.example.dell.netrecycleview.qxinli.ArticleInfo;
 import com.hss01248.net.wrapper.HttpUtil;

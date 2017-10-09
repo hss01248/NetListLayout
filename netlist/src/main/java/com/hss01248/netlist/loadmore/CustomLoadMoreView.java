@@ -1,8 +1,8 @@
-package com.example.dell.netrecycleview.loadmore;
+package com.hss01248.netlist.loadmore;
 
 
 import com.chad.library.adapter.base.loadmore.LoadMoreView;
-import com.example.dell.netrecycleview.R;
+import com.hss01248.netlist.R;
 
 /**
  * Created by BlingBling on 2016/10/15.

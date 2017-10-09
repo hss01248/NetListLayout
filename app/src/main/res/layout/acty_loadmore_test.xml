@@ -3,7 +3,7 @@
 		android:orientation="vertical" android:layout_width="match_parent"
 		android:layout_height="match_parent">
 
-	<com.example.dell.netrecycleview.view.LoadMoreRecyclerLayout
+	<com.hss01248.netlist.view.LoadMoreRecyclerLayout
 			android:id="@+id/loadmore_layout"
 			android:layout_width="match_parent"
 			android:layout_height="match_parent"/>

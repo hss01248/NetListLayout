@@ -1,8 +1,9 @@
-package com.example.dell.netrecycleview.view;
+package com.hss01248.netlist.view;
 
 import android.support.annotation.IdRes;
 
-import com.example.dell.netrecycleview.R;
+import com.hss01248.netlist.R;
+
 
 /**
  * Created by huangshuisheng on 2017/9/30.

@@ -1,4 +1,4 @@
-package com.example.dell.netrecycleview.view;
+package com.hss01248.netlist.view;
 
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.hss01248.net.util.TextUtils;
