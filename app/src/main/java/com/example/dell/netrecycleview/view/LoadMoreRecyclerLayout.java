@@ -1,22 +1,19 @@
 package com.example.dell.netrecycleview.view;
 
 import android.content.Context;
-import android.graphics.Color;
 import android.support.v4.widget.SwipeRefreshLayout;
-import android.support.v7.widget.DefaultItemAnimator;
-import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.AttributeSet;
+import android.view.View;
 import android.view.ViewGroup;
 
 import com.chad.library.adapter.base.BaseQuickAdapter;
-import com.example.dell.netrecycleview.loadmore.CustomLoadMoreView;
 import com.example.dell.netrecycleview.qxinli.ArticleInfo;
 import com.hss01248.net.builder.StandardJsonRequestBuilder;
 import com.hss01248.net.wrapper.HttpUtil;
 import com.hss01248.net.wrapper.MyNetListener;
+import com.hss01248.pagestate.PageListener;
 import com.hss01248.pagestate.PageManager;
-import com.yqritc.recyclerviewflexibledivider.HorizontalDividerItemDecoration;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -76,36 +73,116 @@ public class LoadMoreRecyclerLayout extends SwipeRefreshLayout {
     }
 
     public void start(){
-        recyclerView.setLayoutManager(new LinearLayoutManager(getContext(),LinearLayoutManager.VERTICAL,false));
-        recyclerView.setItemAnimator(new DefaultItemAnimator());
-        recyclerView.addItemDecoration(
-            new HorizontalDividerItemDecoration.Builder(getContext())
-                .color(Color.RED)
-                .size(5)
-                .build());
-        currentPageIndex = 1;
-        pageManager = PageManager.init(recyclerView, "empty", true, new Runnable() {
+        if(pageStateConfig ==null){
+            pageStateConfig = new PageStateConfig();
+        }
+        if(recyclerViewConfig == null){
+            recyclerViewConfig = new RecyclerViewConfig(getContext());
+        }
+        if(refreshConfig == null){
+            refreshConfig = new RefreshConfig();
+        }
+        if(loadMoreConfig ==null){
+            loadMoreConfig = new LoadMoreConfig();
+        }
+
+        //recycleview
+        recyclerView.setLayoutManager(recyclerViewConfig.layoutManager);
+        recyclerView.setItemAnimator(recyclerViewConfig.itemAnimator);
+        recyclerView.addItemDecoration(recyclerViewConfig.itemDecoration);
+        currentPageIndex = 0;
+
+
+        //refresh下拉颜色-该api会导致页面加载状态失常
+        //setColorSchemeResources(refreshConfig.colorIntRes);
+
+
+        //页面状态管理  todo 页面内自定义api的实现
+        pageManager = PageManager.init(recyclerView, pageStateConfig.msg_empty, pageStateConfig.showLoadingFirstIn, new Runnable() {
             @Override
             public void run() {
                 getData(0);
             }
         });
+        // 后面再设置会导致前面retryevent失效
+        /*pageManager.mLoadingAndRetryLayout.setLoadingView(pageStateConfig.loadingLayoutId);
+        pageManager.mLoadingAndRetryLayout.setEmptyView(pageStateConfig.emptyLayoutId);
+        pageManager.mLoadingAndRetryLayout.setRetryView(pageStateConfig.errorLayoutId);*/
+
+
+        //initPageManager();
+
+
         initAdapter();
+
+
         getData(0);
 
+    }
+
+    private void initPageManager() {
+
+        /*pageManager.mLoadingAndRetryLayout.setLoadingView(pageStateConfig.loadingLayoutId);
+        pageManager.mLoadingAndRetryLayout.setEmptyView(pageStateConfig.emptyLayoutId);
+        pageManager.mLoadingAndRetryLayout.setRetryView(pageStateConfig.errorLayoutId);*/
+        pageManager = PageManager.generate(recyclerView, new PageListener() {
+            public void setRetryEvent(View retryView) {
+                if(retryView==null){
+                    return;
+                }
+                retryView.setOnClickListener(new OnClickListener() {
+                    public void onClick(View v) {
+                        if(!PageManager.isNetWorkAvailable(recyclerView.getContext())) {
+                            PageManager.showNoNetWorkDlg(recyclerView);
+                        } else {
+                            getData(0);
+                        }
+
+                    }
+                });
+            }
+/*
+            @Override
+            public int generateRetryLayoutId() {
+                return pageStateConfig.errorLayoutId;
+            }
+
+            @Override
+            public int generateLoadingLayoutId() {
+                return pageStateConfig.loadingLayoutId;
+            }
+
+            @Override
+            public int generateEmptyLayoutId() {
+                return pageStateConfig.emptyLayoutId;
+            }*/
+
+            /*public View generateEmptyLayout() {
+                return PageManager.generateCustomEmptyView(emptyMsg);
+            }*/
+        });
+
+        pageManager.mLoadingAndRetryLayout.setLoadingView(pageStateConfig.loadingLayoutId);
+        pageManager.mLoadingAndRetryLayout.setEmptyView(pageStateConfig.emptyLayoutId);
+        pageManager.mLoadingAndRetryLayout.setRetryView(pageStateConfig.errorLayoutId);
+
+        if(pageStateConfig.showLoadingFirstIn) {
+            pageManager.showLoading();
+        } else {
+            pageManager.showContent();
+        }
     }
 
     private void initAdapter() {
         adapter = pageCustomConfig.adapter;
         recyclerView.setAdapter(adapter);
-        adapter.setLoadMoreView(new CustomLoadMoreView());
+        adapter.setLoadMoreView(loadMoreConfig.loadMoreView);
         //adapter.setEmptyView(R.layout.pager_empty);
 
         adapter.setOnLoadMoreListener(new BaseQuickAdapter.RequestLoadMoreListener() {
             @Override
             public void onLoadMoreRequested() {
                 getData(currentPageIndex+1);
-
             }
         });
 
@@ -127,8 +204,8 @@ public class LoadMoreRecyclerLayout extends SwipeRefreshLayout {
         }
         int index = pageIndex>1 ? pageIndex :1;
         StandardJsonRequestBuilder builder = HttpUtil.buildStandardJsonRequest(pageCustomConfig.getRequestUrl(), pageCustomConfig.getBeanClazz())
-            .addParam("pageSize",""+PAGE_SIZE)
-            .addParam("pageIndex",index+"")
+            .addParam(loadMoreConfig.key_pageSize,""+PAGE_SIZE)
+            .addParam(loadMoreConfig.key_pageIndex,index+"")
             .addParams(pageCustomConfig.getParams());
 
             builder.postAsync(new MyNetListener<ArticleInfo>() {
@@ -140,7 +217,7 @@ public class LoadMoreRecyclerLayout extends SwipeRefreshLayout {
                 @Override
                 public void onSuccessArr(List<ArticleInfo> response, String resonseStr, boolean isFromCache) {
                     super.onSuccessArr(response, resonseStr, isFromCache);
-                    currentPageIndex = pageIndex;
+
                     if(pageIndex ==0){//第一次进入
                         currentPageIndex = 1;
                         pageManager.showContent();
@@ -148,9 +225,11 @@ public class LoadMoreRecyclerLayout extends SwipeRefreshLayout {
                     }else if(pageIndex ==1){//刷新
                         currentPageIndex = 1;
                         adapter.replaceData(response);
+                        //pageManager.showContent();
                         setRefreshing(false);
 
                     }else {//加载更多
+                        currentPageIndex = pageIndex;
                         adapter.addData(response);
                         if(response.size()<PAGE_SIZE){
                             adapter.loadMoreEnd(false);
@@ -203,23 +282,20 @@ public class LoadMoreRecyclerLayout extends SwipeRefreshLayout {
 
     }
 
-    /*public LoadMoreRecyclerLayout setRefreshConfig(RefreshConfig refreshConfig){
+    public LoadMoreRecyclerLayout setRefreshConfig(RefreshConfig refreshConfig){
+        this.refreshConfig = refreshConfig;
         return this;
     }
     public LoadMoreRecyclerLayout setLoadMoreConfig(LoadMoreConfig loadMoreConfig){
+        this.loadMoreConfig = loadMoreConfig;
         return this;
     }
     public LoadMoreRecyclerLayout setPageStateConfig(PageStateConfig pageStateConfig){
+        this.pageStateConfig = pageStateConfig;
         return this;
     }
     public LoadMoreRecyclerLayout setRecyclerViewConfig(RecyclerViewConfig recyclerViewConfig){
-        if(recyclerViewConfig==null){
-            return this;
-        }
-
         this.recyclerViewConfig = recyclerViewConfig;
-
-
         return this;
-    }*/
+    }
 }

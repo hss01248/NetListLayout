@@ -33,6 +33,6 @@ dependencies {
 	compile 'com.yqritc:recyclerview-flexibledivider:1.4.0'
 
 	compile 'com.github.hss01248.HttpUtilForAndroid:HttpUtil:2.2.5'
-	compile 'com.github.hss01248:PageStateManager:1.0.3'
+	compile 'com.github.hss01248:PageStateManager:1.0.4'
 
 }

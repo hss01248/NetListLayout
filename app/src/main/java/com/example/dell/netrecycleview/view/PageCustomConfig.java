@@ -1,7 +1,9 @@
 package com.example.dell.netrecycleview.view;
 
 import com.chad.library.adapter.base.BaseQuickAdapter;
+import com.hss01248.net.util.TextUtils;
 
+import java.util.HashMap;
 import java.util.Map;
 
 /**
@@ -75,8 +77,14 @@ public class PageCustomConfig {
             return this;
         }
 
-        public Builder params(Map<String, String> val) {
-            params = val;
+        public Builder addParam(String key,String val) {
+            if(params == null){
+                params = new HashMap<>();
+            }
+            if(TextUtils.isEmpty(key) || val==null){
+                throw new RuntimeException("key or value in http can not be null") ;
+            }
+            params.put(key,val);
             return this;
         }
 

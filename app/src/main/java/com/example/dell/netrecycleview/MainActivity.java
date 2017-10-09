@@ -5,6 +5,8 @@ import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.widget.Button;
 
+import com.example.dell.netrecycleview.acty.TestLoadMoreLayoutActy;
+
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
@@ -23,6 +25,6 @@ public class MainActivity extends AppCompatActivity {
 
     @OnClick(R.id.button)
     public void onViewClicked() {
-        startActivity(new Intent(this,RefreshLoadMorePageActy.class));
+        startActivity(new Intent(this,TestLoadMoreLayoutActy.class));
     }
 }

@@ -23,6 +23,7 @@
 			</intent-filter>
 		</activity>
 		<activity android:name=".RefreshLoadMorePageActy"/>
+		<activity android:name=".acty.TestLoadMoreLayoutActy"/>
 	</application>
 
 </manifest>
