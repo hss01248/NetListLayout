@@ -9,6 +9,7 @@ import com.example.dell.netrecycleview.qxinli.ArticleAdapter;
 import com.example.dell.netrecycleview.qxinli.ArticleInfo;
 import com.hss01248.netlist.view.LoadMoreRecyclerLayout;
 import com.hss01248.netlist.view.PageCustomConfig;
+import com.hss01248.netlist.view.PageStateConfig;
 
 import java.util.ArrayList;
 
@@ -32,7 +33,8 @@ public class TestLoadMoreLayoutActy extends Activity {
             .requestUrl("article/getArticleList/v1.json")
             .addParam("categoryId","0").build();
 
-        recyclerLayout.setPageCustomConfig(pageCustomConfig);
+        recyclerLayout.setPageCustomConfig(pageCustomConfig)//每个页面的自定义参数
+                      .setPageStateConfig(new PageStateConfig());//非必需
         recyclerLayout.start();
     }
 }
