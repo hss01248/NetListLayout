@@ -19,7 +19,7 @@ public class BaseApp extends Application {
         super.onCreate();
         HttpUtil.init(this,"http://api.qxinli.com:9001/api/")
             //.addInterceptor(new ChuckInterceptor(this))//注:会影响上传下载的实时进度显示,调试上传下载时,关闭此拦截器
-            //.addJsonParseStragegy(19,new AkulakuParser())
+           
             .openLog("httputil");
         // MyRetrofitUtil.init(getApplicaionContext());
         registCallback();
